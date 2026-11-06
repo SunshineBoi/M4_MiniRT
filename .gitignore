@@ -1,0 +1,50 @@
+# Build artifacts
+*.o
+*.obj
+*.out
+*.exe
+*.a
+*.so
+*.dll
+*.dSYM/
+*.pch
+
+# Dependency/build tools
+# /Makefile
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+
+# Editor/OS clutter
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Test binaries
+/coverage/
+/build/
+/dist/
+/tmp/
+/*.log
+
+# Project binary
+/miniRT
+
+# Crash dumps
+core
+vgcore.*
+
+# Local tools
+.claude/
+.cache/
+compile_commands.json
+
+# Subject and reference files, not part of the submission
+/resource/
+
+# MiniLibX, fetched by the Makefile
+/minilibx-linux/
