@@ -1,5 +1,10 @@
 #include "test.h"
 
+/*
+** Add, subtract, scale and dot on small whole numbers, where the answer is
+** exact. Also checks two special cases: scaling by 0 gives the zero vector,
+** and vectors at right angles have a dot product of 0.
+*/
 static void	test_basic_ops(void)
 {
 	check_vec("add", vec_add(v(1, 2, 3), v(4, 5, 6)), v(5, 7, 9), TOL_EXACT);
@@ -11,6 +16,11 @@ static void	test_basic_ops(void)
 		TOL_EXACT);
 }
 
+/*
+** Cross product: x cross y gives z, swapping the order flips the sign,
+** parallel vectors give the zero vector, and one general case worked out by
+** hand. The order check matters because the camera builds its axes with it.
+*/
 static void	test_cross(void)
 {
 	check_vec("cross x, y", vec_cross(v(1, 0, 0), v(0, 1, 0)), v(0, 0, 1),
@@ -23,6 +33,12 @@ static void	test_cross(void)
 		v(-3, 6, -3), TOL_EXACT);
 }
 
+/*
+** Length of a 3-4-5 vector and of the zero vector. Normalize must return 1
+** and give length 1 on a normal vector. On a zero, tiny or NaN vector it must
+** return 0 and leave out untouched, which is why out is preset to 9, 9, 9.
+** The last checks normalize a vector into itself.
+*/
 static void	test_length_normalize(void)
 {
 	t_vec	out;

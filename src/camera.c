@@ -1,18 +1,18 @@
 #include "mrt.h"
 
-t_camera	make_cam(t_vec fwd, double fov)
-{
-	t_camera	cam;
+// t_camera	make_cam(t_vec fwd, double fov)
+// {
+// 	t_camera	cam;
 
-	cam.pos = v(-50, 0, 20);
-	cam.fwd = fwd;
-	cam.right = v(999, 999, 999);
-	cam.top = v(999, 999, 999);
-	cam.fov_deg = fov;
-	cam.scale = 999;
-	cam.aspect = 999;
-	return (cam);
-}
+// 	cam.pos = v(-50, 0, 20);
+// 	cam.fwd = fwd;
+// 	cam.right = v(999, 999, 999);
+// 	cam.top = v(999, 999, 999);
+// 	cam.fov_deg = fov;
+// 	cam.scale = 999;
+// 	cam.aspect = 999;
+// 	return (cam);
+// }
 
 static int	set_cam_right(t_camera *cam)
 {
@@ -69,23 +69,5 @@ t_ray	set_ray(t_camera *cam, int row, int col)
 	ray.src = cam->pos;
 	vec_normalize(offset, &ray.dir);
 	return (ray);
-}
-
-void	render(t_camera *cam)
-{
-	int	col;
-	int	row;
-
-	row = 0;
-	while (row < WIN_HEIGHT)
-	{
-		col = 0;
-		while (col < WIN_WIDTH)
-		{
-			set_ray(cam, row, col);
-			col++;
-		}
-		row++;
-	}
 }
 
