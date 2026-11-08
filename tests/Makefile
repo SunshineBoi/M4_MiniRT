@@ -32,7 +32,7 @@ memcheck: $(TEST_BINS)
 
 $(BUILD_DIR)/%: %.c test.h $(PROJECT_SRCS) $(HEADER)
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $(INCLUDES) $< $(PROJECT_SRCS) -lm -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) $< $(PROJECT_SRCS) -L$(ROOT)/minilibx-linux -lmlx -lXext -lX11 -lm -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)

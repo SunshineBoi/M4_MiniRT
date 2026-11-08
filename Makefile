@@ -37,7 +37,7 @@ INCLUDES = -I${MINIRT_HEADER_DIR} -I${MLX_DIR}
 
 # OBJS = $(SRCS:.c=.o)
 
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(MINIRT_HEADER_DIR)/mrt.h
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
