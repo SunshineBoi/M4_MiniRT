@@ -45,6 +45,13 @@ typedef struct s_ray
 	t_vec	dir;
 }	t_ray;
 
+typedef struct s_sphere
+{
+	t_vec	center;
+	double	radius;
+	int		color;
+}	t_sphere;
+
 typedef struct s_camera
 {
 	t_vec	pos;
@@ -61,6 +68,7 @@ typedef struct s_app
 	t_mlx		*mlx_obj;
 	t_image		*img_obj;
 	t_camera	cam;
+	t_sphere	sp;  // ! temp
 }	t_app;
 
 /*
@@ -106,6 +114,14 @@ t_ray		set_ray(t_camera *cam, int row, int col);
 ** ---------------------------------------------------------------------
 */
 void		render(t_app *app);
+
+/*
+** ---------------------------------------------------------------------
+** sphere.c
+** ---------------------------------------------------------------------
+*/
+t_vec		hit_sphere_normal(t_vec hit, t_sphere *sp);
+int			hit_sphere(t_ray ray, t_sphere *sp, double *t);
 
 /*
 ** ---------------------------------------------------------------------
