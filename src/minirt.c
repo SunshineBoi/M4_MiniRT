@@ -40,11 +40,15 @@ temporary scene
 static int	setup_scene(t_app *app)
 {
 	app->cam.pos = v(0, 0, 0);
-	// app->cam.fwd = v(0, 0, 1);
-	app->cam.fwd = v(0, 1, 0);
+	app->cam.fwd = v(0, 0, 1);
 	app->cam.fov_deg = 70;
 	if (!setup_camera(&app->cam))
 		return (p_err("miniRT: bad camera"), 0);
+
+	// setup sphere
+	app->sp.center = v(0, 0, 40);
+	app->sp.radius = 20 / 2.0;
+	app->sp.color = rgb_to_int(255, 0, 0);
 	return (1);
 }
 
