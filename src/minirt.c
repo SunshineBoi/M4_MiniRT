@@ -45,10 +45,16 @@ static int	setup_scene(t_app *app)
 	if (!setup_camera(&app->cam))
 		return (p_err("miniRT: bad camera"), 0);
 
+	// temp: setup amb and light
+	app->amb.ratio = 0.2;
+	app->amb.color = norm_rgb(255, 255, 255);
+	app->light.pos = v(0, 40, 0);
+	app->light.ratio = 0.6;
+	app->light.color = norm_rgb(255, 255, 255);
 	// setup sphere
 	app->sp.center = v(0, 0, 40);
 	app->sp.radius = 20 / 2.0;
-	app->sp.color = rgb_to_int(255, 0, 0);
+	app->sp.color = norm_rgb(0, 255, 0);
 	return (1);
 }
 
