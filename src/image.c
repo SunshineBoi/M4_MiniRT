@@ -1,12 +1,5 @@
 #include "mrt.h"
 
-// in 1-byte: r = 0xFF (hex) / 255 (dec)
-// int has 4-bytes, doing bitshift to form the full integer.
-int	rgb_to_int(int r, int g, int b)
-{
-	return (r << 16 | g << 8 | b);
-}
-
 int	init_mlx_img(t_mlx *mlx_obj, t_image *img_obj)
 {
 	img_obj->img_ptr = mlx_new_image(

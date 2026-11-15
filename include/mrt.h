@@ -45,12 +45,33 @@ typedef struct s_ray
 	t_vec	dir;
 }	t_ray;
 
-typedef struct s_sphere
+typedef struct s_color
 {
-	t_vec	center;
-	double	radius;
-	int		color;
-}	t_sphere;
+	double	r;
+	double	g;
+	double	b;
+}	t_color;
+
+typedef struct s_hit
+{
+	double	dist_to_hit;
+	t_vec	hit_vec;
+	t_vec	normal_at_hit;
+	t_color	color;
+}	t_hit;
+
+typedef struct s_ambient
+{
+	double	ratio;
+	t_color	color;
+}	t_ambient;
+
+typedef struct s_light
+{
+	t_vec	pos;
+	double	ratio;
+	t_color	color;
+}	t_light;
 
 typedef struct s_camera
 {
@@ -63,12 +84,21 @@ typedef struct s_camera
 	double	aspect;
 }	t_camera;
 
+typedef struct s_sphere
+{
+	t_vec	center;
+	double	radius;
+	t_color	color;
+}	t_sphere;
+
 typedef struct s_app
 {
 	t_mlx		*mlx_obj;
 	t_image		*img_obj;
 	t_camera	cam;
 	t_sphere	sp;  // ! temp
+	t_ambient	amb;
+	t_light		light;
 }	t_app;
 
 /*
@@ -95,10 +125,18 @@ void		setup_events(t_app *app);
 ** image.c
 ** ---------------------------------------------------------------------
 */
-int			rgb_to_int(int r, int g, int b);
 int			init_mlx_img(t_mlx *mlx_obj, t_image *img_obj);
 t_image		*init_img(t_mlx *mlx_obj);
 void		color_pixel(t_app *app, int row, int col, int color);
+
+/*
+** ---------------------------------------------------------------------
+** color.c
+** ---------------------------------------------------------------------
+*/
+int			rgb_to_int(int r, int g, int b);
+t_color		norm_rgb(int r, int g, int b);
+int			norm_rgb_to_int(t_color c);
 
 /*
 ** ---------------------------------------------------------------------
@@ -120,8 +158,15 @@ void		render(t_app *app);
 ** sphere.c
 ** ---------------------------------------------------------------------
 */
-t_vec		hit_sphere_normal(t_vec hit, t_sphere *sp);
+t_vec		hit_sphere_normal(t_vec hit_vec, t_sphere sp);
 int			hit_sphere(t_ray ray, t_sphere *sp, double *t);
+
+/*
+** ---------------------------------------------------------------------
+** light.c
+** ---------------------------------------------------------------------
+*/
+t_color		shade(t_app *app, t_hit hit);
 
 /*
 ** ---------------------------------------------------------------------
