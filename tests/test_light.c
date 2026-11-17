@@ -24,11 +24,11 @@ static void	check_color(const char *label, t_color got, t_color want,
 */
 static void	test_scene(t_app *app, t_hit *hit)
 {
-	app->amb.ratio = 0.2;
-	app->amb.color = (t_color){1, 1, 1};
-	app->light.pos = v(0, 40, 0);
-	app->light.ratio = 0.6;
-	app->light.color = (t_color){1, 1, 1};
+	app->scene.amb.ratio = 0.2;
+	app->scene.amb.color = (t_color){1, 1, 1};
+	app->scene.light.pos = v(0, 40, 0);
+	app->scene.light.ratio = 0.6;
+	app->scene.light.color = (t_color){1, 1, 1};
 	hit->dist_to_hit = 30;
 	hit->hit_vec = v(0, 0, 30);
 	hit->normal_at_hit = v(0, 0, -1);
@@ -88,36 +88,36 @@ static void	test_shade(void)
 
 	// 1
 	test_scene(&app, &hit);
-	check_color("shade worked example", shade(&app, hit),
+	check_color("shade worked example", shade(&app.scene, hit),
 		(t_color){0.56, 0, 0}, TOL_EXACT);
 	// 2
-	app.light.pos = v(0, 0, 0);
-	check_color("shade facing the light", shade(&app, hit),
+	app.scene.light.pos = v(0, 0, 0);
+	check_color("shade facing the light", shade(&app.scene, hit),
 		(t_color){0.8, 0, 0}, TOL_EXACT);
 	// 3
-	app.light.pos = v(0, 0, 100);
-	check_color("shade facing away", shade(&app, hit),
+	app.scene.light.pos = v(0, 0, 100);
+	check_color("shade facing away", shade(&app.scene, hit),
 		(t_color){0.2, 0, 0}, TOL_EXACT);
 	// 4
-	app.amb.ratio = 1;
-	app.amb.color = (t_color){0, 0, 1};
-	check_color("shade coloured ambient", shade(&app, hit),
+	app.scene.amb.ratio = 1;
+	app.scene.amb.color = (t_color){0, 0, 1};
+	check_color("shade coloured ambient", shade(&app.scene, hit),
 		(t_color){0, 0, 0}, TOL_EXACT);
 	// 5
 	test_scene(&app, &hit);
-	app.light.pos = v(0, 0, 30);
-	check_color("shade light at the hit point", shade(&app, hit),
+	app.scene.light.pos = v(0, 0, 30);
+	check_color("shade light at the hit point", shade(&app.scene, hit),
 		(t_color){0.2, 0, 0}, TOL_EXACT);
 	// 6
 	test_scene(&app, &hit);
-	app.amb.ratio = 1;
-	app.light.pos = v(0, 0, 0);
-	app.light.ratio = 1;
+	app.scene.amb.ratio = 1;
+	app.scene.light.pos = v(0, 0, 0);
+	app.scene.light.ratio = 1;
 	hit.color = (t_color){1, 1, 1};
-	check_color("shade needs clamping", shade(&app, hit),
+	check_color("shade needs clamping", shade(&app.scene, hit),
 		(t_color){2, 2, 2}, TOL_EXACT);
 	check_int("shade needs clamping: pixel",
-		norm_rgb_to_int(shade(&app, hit)), 0xFFFFFF);
+		norm_rgb_to_int(shade(&app.scene, hit)), 0xFFFFFF);
 }
 
 int	main(void)
