@@ -13,10 +13,11 @@ int	hit_plane(t_ray ray, t_object *obj, double *t_hit)
 
 	// 2. compute numerator
 	// y is the shortest distance from source to plane
+	// sign just tells which side of plane the camera is at.
 	y = vec_dot(vec_sub(obj->center, ray.src), obj->axis);
 
 	// 3. compute distance from source to hit point
-	// positive means within sight, and vice versa.
+	// positive means within sight, and negative is not.
 	if (y / dy <= EPSILON)
 		return (0);
 	*t_hit = y / dy;

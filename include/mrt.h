@@ -90,12 +90,12 @@ typedef struct s_camera
 	double	aspect;
 }	t_camera;
 
-typedef struct s_sphere
-{
-	t_vec	center;
-	double	radius;
-	t_color	color;
-}	t_sphere;
+// typedef struct s_sphere
+// {
+// 	t_vec	center;
+// 	double	radius;
+// 	t_color	color;
+// }	t_sphere;
 
 typedef struct s_object
 {
