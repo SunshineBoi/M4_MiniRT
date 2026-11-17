@@ -26,6 +26,8 @@ int	freeappexit(t_app *app, int code)
 	}
 	if (app->mlx_obj)
 		freemlx(app->mlx_obj);
+	if (app->scene.obj)
+		free_objects(app->scene.obj);
 	free(app);
 	exit(code);
 	return (code);

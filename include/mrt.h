@@ -13,6 +13,12 @@
 # define WIN_WIDTH 1500
 # define WIN_HEIGHT 900
 
+typedef enum e_type {
+	SPHERE,
+	PLANE,
+	CYLINDER
+}	t_type;
+
 typedef struct s_mlx
 {
 	void	*conn_ptr;
@@ -84,21 +90,37 @@ typedef struct s_camera
 	double	aspect;
 }	t_camera;
 
-typedef struct s_sphere
+// typedef struct s_sphere
+// {
+// 	t_vec	center;
+// 	double	radius;
+// 	t_color	color;
+// }	t_sphere;
+
+typedef struct s_object
 {
-	t_vec	center;
-	double	radius;
-	t_color	color;
-}	t_sphere;
+	t_type			type;
+	t_vec			center;
+	t_vec			axis;  // for plane and cylinder
+	double			radius;  // for sphere and cylinder
+	double			height;  // for cylinder
+	t_color			color;
+	struct s_object	*next;
+}	t_object;
+
+typedef struct s_scene
+{
+	t_camera	cam;
+	t_ambient	amb;
+	t_light		light;
+	t_object	*obj;	
+}	t_scene;
 
 typedef struct s_app
 {
 	t_mlx		*mlx_obj;
 	t_image		*img_obj;
-	t_camera	cam;
-	t_sphere	sp;  // ! temp
-	t_ambient	amb;
-	t_light		light;
+	t_scene		scene;
 }	t_app;
 
 /*
@@ -158,15 +180,39 @@ void		render(t_app *app);
 ** sphere.c
 ** ---------------------------------------------------------------------
 */
-t_vec		hit_sphere_normal(t_vec hit_vec, t_sphere sp);
-int			hit_sphere(t_ray ray, t_sphere *sp, double *t);
+t_vec		hit_sphere_normal(t_vec hit_vec, t_object *sp);
+int			hit_sphere(t_ray ray, t_object *sp, double *t);
+
+/*
+** ---------------------------------------------------------------------
+** plane.c
+** ---------------------------------------------------------------------
+*/
+int			hit_plane(t_ray ray, t_object *obj, double *t_hit);
+
+/*
+** ---------------------------------------------------------------------
+** hit.c
+** ---------------------------------------------------------------------
+*/
+int			hit_object(t_ray ray, t_object *obj, double *t_hit);
+t_vec		normal_at_hit_obj(t_object *obj, t_vec hit_vec);
+int			find_nearest_hit(t_ray ray, t_scene *scene, t_hit *hit);
 
 /*
 ** ---------------------------------------------------------------------
 ** light.c
 ** ---------------------------------------------------------------------
 */
-t_color		shade(t_app *app, t_hit hit);
+t_color		shade(t_scene *scene, t_hit hit);
+
+/*
+** ---------------------------------------------------------------------
+** object.c
+** ---------------------------------------------------------------------
+*/
+void		free_objects(t_object *obj);
+int			add_objects(t_object **lst, t_object obj);
 
 /*
 ** ---------------------------------------------------------------------

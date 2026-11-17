@@ -9,6 +9,7 @@ t_app	*init_app(void)
 		return (p_syserr(), NULL);
 	new->img_obj = NULL;
 	new->mlx_obj = NULL;
+	new->scene.obj = NULL;
 	return (new);
 }
 
@@ -39,22 +40,42 @@ temporary scene
 */
 static int	setup_scene(t_app *app)
 {
-	app->cam.pos = v(0, 0, 0);
-	app->cam.fwd = v(0, 0, 1);
-	app->cam.fov_deg = 70;
-	if (!setup_camera(&app->cam))
+	app->scene.cam.pos = v(0, 0, 0);
+	app->scene.cam.fwd = v(0, 0, 1);
+	app->scene.cam.fov_deg = 70;
+	if (!setup_camera(&app->scene.cam))
 		return (p_err("miniRT: bad camera"), 0);
 
 	// temp: setup amb and light
-	app->amb.ratio = 0.2;
-	app->amb.color = norm_rgb(255, 255, 255);
-	app->light.pos = v(0, 40, 0);
-	app->light.ratio = 0.6;
-	app->light.color = norm_rgb(255, 255, 255);
-	// setup sphere
-	app->sp.center = v(0, 0, 40);
-	app->sp.radius = 20 / 2.0;
-	app->sp.color = norm_rgb(0, 255, 0);
+	app->scene.amb.ratio = 0.2;
+	app->scene.amb.color = norm_rgb(255, 255, 255);
+	app->scene.light.pos = v(0, 40, 0);
+	app->scene.light.ratio = 0.6;
+	app->scene.light.color = norm_rgb(255, 255, 255);
+
+	// setup object
+	t_object	sp;
+	sp.type = SPHERE;
+	sp.center = v(0, 0, 40);
+	sp.axis = v(0, 0, 0);
+	sp.radius = 20 / 2.0;
+	sp.height = 0;
+	sp.color = norm_rgb(0, 255, 0);
+	sp.next = NULL;
+	if (!add_objects(&app->scene.obj, sp))
+		return (0);
+
+	// floor: 10 below the camera, normal up, white
+	t_object	pl;
+	pl.type = PLANE;
+	pl.center = v(0, -5, 0);
+	pl.axis = v(0, 1, 0); // v(0.707, 0.707, 0)
+	pl.radius = 0;
+	pl.height = 0;
+	pl.color = norm_rgb(255, 255, 255);
+	pl.next = NULL;
+	if (!add_objects(&app->scene.obj, pl))
+		return (0);
 	return (1);
 }
 
@@ -66,9 +87,10 @@ int	minirt(void)
 	if (!app)
 		return (EXIT_FAILURE);
 	// todo: parse file
+
 	// ! temporary scene
 	if (!setup_scene(app))
-		return (free(app), EXIT_FAILURE);
+		return (freeappexit(app, EXIT_FAILURE));
 
 	app->mlx_obj = setup_mlx();
 	if (!app->mlx_obj)

@@ -1,11 +1,15 @@
 #include "test.h"
 
 /* All tests use one sphere: centre 0,0,40, radius 10. */
-static t_sphere	test_sp(void)
+static t_object	test_sp(void)
 {
-	t_sphere	sp;
+	t_object	sp;
 
+	sp.type = SPHERE;
 	sp.center = v(0, 0, 40);
+	sp.axis = v(0, 0, 0);
+	sp.height = 0;
+	sp.next = NULL;
 	sp.radius = 10;
 	sp.color = (t_color){0, 0, 0};
 	return (sp);
@@ -18,7 +22,7 @@ static t_sphere	test_sp(void)
 */
 static void	check_hit(const char *label, t_vec src, int want_hit, double want_t)
 {
-	t_sphere	sp;
+	t_object	sp;
 	t_ray		ray;
 	double		t;
 	char		name[64];
@@ -62,21 +66,21 @@ static void	test_hit_sphere(void)
 */
 static void	test_normal(void)
 {
-	t_sphere	sp;
+	t_object	sp;
 	t_vec		hit;
 
 	sp = test_sp();
 	hit = v(0, 0, 30);
-	check_vec("normal front", hit_sphere_normal(hit, sp), v(0, 0, -1),
+	check_vec("normal front", hit_sphere_normal(hit, &sp), v(0, 0, -1),
 		TOL_EXACT);
 	hit = v(0, 10, 40);
-	check_vec("normal top", hit_sphere_normal(hit, sp), v(0, 1, 0),
+	check_vec("normal top", hit_sphere_normal(hit, &sp), v(0, 1, 0),
 		TOL_EXACT);
 	hit = v(10, 0, 40);
-	check_vec("normal side", hit_sphere_normal(hit, sp), v(1, 0, 0),
+	check_vec("normal side", hit_sphere_normal(hit, &sp), v(1, 0, 0),
 		TOL_EXACT);
 	check_double("normal side has length 1",
-		vec_length(hit_sphere_normal(hit, sp)), 1, TOL_EXACT);
+		vec_length(hit_sphere_normal(hit, &sp)), 1, TOL_EXACT);
 }
 
 int	main(void)
