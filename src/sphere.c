@@ -1,16 +1,16 @@
 #include "mrt.h"
 
-t_vec	hit_sphere_normal(t_vec hit_vec, t_sphere sp)
+t_vec	hit_sphere_normal(t_vec hit_vec, t_object *sp)
 {
 	// hit = O + t*D
 	// normal = (hit - Center) / r
 	t_vec	normal;
 
-	normal = vec_scale(vec_sub(hit_vec, sp.center), 1 / sp.radius);
+	normal = vec_scale(vec_sub(hit_vec, sp->center), 1 / sp->radius);
 	return (normal);
 }
 
-int	hit_sphere(t_ray ray, t_sphere *sp, double *t)
+int	hit_sphere(t_ray ray, t_object *sp, double *t)
 {
 	t_vec	o_to_c;
 	double	b;

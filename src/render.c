@@ -14,22 +14,11 @@ void	render(t_app *app)
 		col = 0;
 		while (col < WIN_WIDTH)
 		{
-			// set_ray builds O and D once per pixel
-			ray = set_ray(&app->cam, row, col);
-			// test plain rendering:
-			// color_pixel(app, row, col, rgb_to_int(
-			// 	(ray.dir.x + 1) * 0.5 * 255,
-			// 	(ray.dir.y + 1) * 0.5 * 255,
-			// 	(ray.dir.z + 1) * 0.5 * 255));
+			// set_ray builds O and D once per pixel from R(t) = O + t*D
+			ray = set_ray(&app->scene.cam, row, col);
 
-			if (hit_sphere(ray, &app->sp, &hit.dist_to_hit))
-			{
-				// hit = O + t*D
-				hit.hit_vec = vec_add(ray.src, vec_scale(ray.dir, hit.dist_to_hit));
-				hit.normal_at_hit = hit_sphere_normal(hit.hit_vec, app->sp);
-				hit.color = app->sp.color;
-				color_pixel(app, row, col, norm_rgb_to_int(shade(app, hit)));
-			}
+			if (find_nearest_hit(ray, &app->scene, &hit))
+				color_pixel(app, row, col, norm_rgb_to_int(shade(&app->scene, hit)));
 			else
 				color_pixel(app, row, col, 0);
 			col++;
