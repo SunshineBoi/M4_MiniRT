@@ -24,5 +24,5 @@ int	add_objects(t_object **lst, t_object obj)
 
 	new->next = *lst;
 	*lst = new;
-	return (1);	
+	return (1);
 }

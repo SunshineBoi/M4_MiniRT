@@ -30,7 +30,7 @@ t_image	*init_img(t_mlx *mlx_obj)
 void	color_pixel(t_app *app, int row, int col, int color)
 {
 	int	offset;
-	
+
 	if (col < 0 || col >= WIN_WIDTH || row < 0 || row >= WIN_HEIGHT)
 		return ;
 	offset = (row * (app->img_obj->spl)) + (col * (app->img_obj->bpp / 8));

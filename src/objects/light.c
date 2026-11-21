@@ -18,7 +18,7 @@ t_color shade(t_scene *scene, t_hit hit)
 	// 2. ambient contribution
 	amb.r = scene->amb.ratio * scene->amb.color.r;
 	amb.g = scene->amb.ratio * scene->amb.color.g;
-	amb.b = scene->amb.ratio * scene->amb.color.b; 
+	amb.b = scene->amb.ratio * scene->amb.color.b;
 	// 3. light source contribution
 	// ! light color is unused for mandatory, keep first.
 	light.r = scene->light.ratio * scene->light.color.r * diffuse;
