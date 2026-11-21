@@ -5,6 +5,7 @@
 # include <math.h>
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <mlx.h>
 # include <X11/X.h>
 # include <X11/keysym.h>
@@ -12,12 +13,21 @@
 # define EPSILON 1e-9
 # define WIN_WIDTH 1500
 # define WIN_HEIGHT 900
+# define BUFFER_SIZE 1024
 
-typedef enum e_type {
+typedef enum e_type
+{
 	SPHERE,
 	PLANE,
 	CYLINDER
 }	t_type;
+
+typedef struct s_raw
+{
+	char	*in;
+	int		in_size;
+	int		in_alloc_size;
+}	t_raw;
 
 typedef struct s_mlx
 {
@@ -113,7 +123,10 @@ typedef struct s_scene
 	t_camera	cam;
 	t_ambient	amb;
 	t_light		light;
-	t_object	*obj;	
+	t_object	*obj;
+	int			a_flag;
+	int			c_flag;
+	int			l_flag;
 }	t_scene;
 
 typedef struct s_app
@@ -130,11 +143,11 @@ typedef struct s_app
 */
 t_app		*init_app(void);
 t_mlx		*setup_mlx(void);
-int			minirt(void);
+int			minirt(char *file_path);
 
 /*
 ** ---------------------------------------------------------------------
-** events.c
+** utils/events.c
 ** ---------------------------------------------------------------------
 */
 int			handle_close(void *param);
@@ -144,7 +157,7 @@ void		setup_events(t_app *app);
 
 /*
 ** ---------------------------------------------------------------------
-** image.c
+** render/image.c
 ** ---------------------------------------------------------------------
 */
 int			init_mlx_img(t_mlx *mlx_obj, t_image *img_obj);
@@ -153,7 +166,7 @@ void		color_pixel(t_app *app, int row, int col, int color);
 
 /*
 ** ---------------------------------------------------------------------
-** color.c
+** render/color.c
 ** ---------------------------------------------------------------------
 */
 int			rgb_to_int(int r, int g, int b);
@@ -162,7 +175,7 @@ int			norm_rgb_to_int(t_color c);
 
 /*
 ** ---------------------------------------------------------------------
-** camera.c
+** objects/camera.c
 ** ---------------------------------------------------------------------
 */
 int			setup_camera(t_camera *cam);
@@ -170,14 +183,14 @@ t_ray		set_ray(t_camera *cam, int row, int col);
 
 /*
 ** ---------------------------------------------------------------------
-** render.c
+** render/render.c
 ** ---------------------------------------------------------------------
 */
 void		render(t_app *app);
 
 /*
 ** ---------------------------------------------------------------------
-** sphere.c
+** objects/sphere.c
 ** ---------------------------------------------------------------------
 */
 t_vec		hit_sphere_normal(t_vec hit_vec, t_object *sp);
@@ -185,14 +198,14 @@ int			hit_sphere(t_ray ray, t_object *sp, double *t);
 
 /*
 ** ---------------------------------------------------------------------
-** plane.c
+** objects/plane.c
 ** ---------------------------------------------------------------------
 */
 int			hit_plane(t_ray ray, t_object *obj, double *t_hit);
 
 /*
 ** ---------------------------------------------------------------------
-** hit.c
+** render/hit.c
 ** ---------------------------------------------------------------------
 */
 int			hit_object(t_ray ray, t_object *obj, double *t_hit);
@@ -201,14 +214,14 @@ int			find_nearest_hit(t_ray ray, t_scene *scene, t_hit *hit);
 
 /*
 ** ---------------------------------------------------------------------
-** light.c
+** objects/light.c
 ** ---------------------------------------------------------------------
 */
 t_color		shade(t_scene *scene, t_hit hit);
 
 /*
 ** ---------------------------------------------------------------------
-** object.c
+** objects/object.c
 ** ---------------------------------------------------------------------
 */
 void		free_objects(t_object *obj);
@@ -258,5 +271,93 @@ void		p_syserr(void);
 ** ---------------------------------------------------------------------
 */
 size_t		ft_strlen(const char *str);
+int			ft_strcmp(const char *s1, const char *s2);
+char		*ft_strndup(const char *str, size_t n);
+int			count_commas(char *str);
+int			count_words(char *str, char *set);
+
+/*
+** ---------------------------------------------------------------------
+** utils/mem.c
+** ---------------------------------------------------------------------
+*/
+void		*ft_memcpy(void *dest, const void *src, size_t n);
+void		*ft_realloc(void *old, size_t old_size, size_t new_size);
+
+/*
+** ---------------------------------------------------------------------
+** parse/read_file.c
+** ---------------------------------------------------------------------
+*/
+int			read_file(int fd, t_raw *raw);
+
+/*
+** ---------------------------------------------------------------------
+** parse/parse.c
+** ---------------------------------------------------------------------
+*/
+int			parse_fields(char *raw_line, t_scene *scene);
+int			parse_objects(char *raw_in, t_scene *scene);
+int			parse_scene(char *file_path, t_scene *scene);
+
+/*
+** ---------------------------------------------------------------------
+** parse/parse_num.c
+** ---------------------------------------------------------------------
+*/
+int			parse_double(char *str, double *dest);
+int			parse_byte(char *str, int *dest);
+int			is_in_range(double n, double lb, double ub);
+
+/*
+** ---------------------------------------------------------------------
+** parse/parse_vec.c
+** ---------------------------------------------------------------------
+*/
+int			parse_vector(char *str, t_vec *dest);
+int			is_unit_vector(t_vec vec);
+
+/*
+** ---------------------------------------------------------------------
+** parse/parse_color.c
+** ---------------------------------------------------------------------
+*/
+int			parse_color(char *str, t_color *dest);
+
+/*
+** ---------------------------------------------------------------------
+** parse/parse_elem.c
+** ---------------------------------------------------------------------
+*/
+int			parse_ambient(char **fields, t_scene *scene);
+int			parse_camera(char **fields, t_scene *scene);
+int			parse_light(char **fields, t_scene *scene);
+
+/*
+** ---------------------------------------------------------------------
+** parse/parse_obj.c
+** ---------------------------------------------------------------------
+*/
+int			parse_sphere(char **fields, t_scene *scene);
+int			parse_plane(char **fields, t_scene *scene);
+int			parse_cylinder(char **fields, t_scene *scene);
+
+/*
+** ---------------------------------------------------------------------
+** utils/type.c
+** ---------------------------------------------------------------------
+*/
+int			ft_isalpha(int c);
+int			ft_isdigit(int c);
+int			match_delim(char c, char *set);
+
+/*
+** ---------------------------------------------------------------------
+** utils/split.c
+** ---------------------------------------------------------------------
+*/
+int			count_lst(char **lst);
+void		free_list(char **lst);
+char		**ft_split_set(char *str, char *set);
 
 #endif
