@@ -21,7 +21,7 @@ double	vec_length(t_vec v)
 int	vec_normalize(t_vec v, t_vec *out)
 {
 	double	l;
-	
+
 	l = vec_length(v);
 	if (!(l > EPSILON))  // to handle NaN value where it gives false no matter the comparison
 		return (0);
